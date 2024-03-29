@@ -1,15 +1,35 @@
 import { ApolloServer, gql } from "apollo-server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import { quotes, users } from "./fakeobj.js";
 
 const typeDefs = gql`
   type Query {
-    greet: String
+    users: [User]
+    quotes: [Quote]
+  }
+
+  type User {
+    id: ID
+    firstName: String
+    lastName: String
+    email: String
+    passWord: String
+    quotes: [Quote]
+  }
+
+  type Quote {
+    name: String
+    by: ID
   }
 `;
 
 const resolvers = {
   Query: {
-    greet: () => "Hello World",
+    users: () => users,
+    quotes: () => quotes,
+  },
+  User: {
+    quotes: (url) => quotes.filter((quote) => quote.by == url.id),
   },
 };
 
